@@ -11,7 +11,21 @@ var squareObj=function(){
 
 
 function inits(){
-     for(var i=0;i<35;i++){
+    for(var i=0;i<38;i++){
+        square[i]=new squareObj();
+        square[i].x=0;
+        square[i].y=0;
+        square[i].picNo=0;
+        square[i].alive=false;
+        square[i].location=selectOne(arr2);
+        square[i].hover=false;
+        square[i].row=Math.floor(square[i].location/12);
+        square[i].column=square[i].location % 12;       
+    }
+
+
+
+     for(var i=38;i<73;i++){
         square[i]=new squareObj();
         square[i+35]=new squareObj();
         square[i].x=0;
@@ -33,10 +47,10 @@ function inits(){
         square[i+35].location=selectOne(arr1);
         square[i].hover=false;
         square[i+35].hover=false;
-        square[i].row=Math.floor(square[i].location/10);
-        square[i].column=square[i].location % 10;
-        square[i+35].row=Math.floor(square[i+35].location/10);
-        square[i+35].column=square[i+35].location % 10;
+        square[i].row=Math.floor(square[i].location/12);
+        square[i].column=square[i].location % 12;
+        square[i+35].row=Math.floor(square[i+35].location/12);
+        square[i+35].column=square[i+35].location % 12;
         
     }
 
@@ -51,14 +65,14 @@ squareObj.prototype.draw=function(){
     if(this.alive){
         
         var no=this.picNo;
-        ctx2.drawImage(squareNo[no],this.column*70+50,this.row*70+100);
+        ctx2.drawImage(squareNo[no],this.column*70+50-70,this.row*70+100-70);
         if(this.hover){
             ctx2.globalpha=0.5;
             ctx2.fillStyle="rgba(255,0,0,0.5)";
-            ctx2.fillRect(this.column*70+50,this.row*70+100,70,70);
+            ctx2.fillRect(this.column*70+50-70,this.row*70-70+100,70,70);
         }
     }else{
-        ctx2.clearRect(this.column*70+50,this.row*70+100,70,70);
+        ctx2.clearRect(this.column*70+50-70,this.row*70+100-70,70,70);
     }
     
     
@@ -66,8 +80,8 @@ squareObj.prototype.draw=function(){
 }
 
 function samePic(aRow,aColumn,bRow,bColumn){
-    var aLocation=aRow*10+aColumn;
-    var bLocation=bRow*10+bColumn;
+    var aLocation=aRow*12+aColumn;
+    var bLocation=bRow*12+bColumn;
     if(square[foundIndex(aLocation)].picNo != square[foundIndex(bLocation)].picNo){
     
         return false;
@@ -97,7 +111,7 @@ function sameRow(aRow,aColumn,bRow,bColumn){
              return true;
          }else{
              for(var i=0;i<maxColumn-minColumn-1;i++){
-             if(!square[foundIndex(aRow*10+minColumn+i+1)].alive){
+             if(!square[foundIndex(aRow*12+minColumn+i+1)].alive){
                  var flag=true;
              }else{
                  var flag=false;
@@ -119,7 +133,7 @@ function sameColumn(aRow,aColumn,bRow,bColumn){
              return true;
          }else{
              for(var i=0;i<maxRow-minRow-1;i++){
-             if(!square[foundIndex((minRow+i+1)*10+aColumn)].alive){
+             if(!square[foundIndex((minRow+i+1)*12+aColumn)].alive){
                  var flag=true;
              }else{
                  var flag=false;
@@ -137,14 +151,14 @@ function sameColumn(aRow,aColumn,bRow,bColumn){
 
 function turnOnce(aRow,aColumn,bRow,bColumn){
     if(aRow!=bRow && aColumn!= bColumn){
-        if(!square[foundIndex(aRow*10+bColumn)].alive){
+        if(!square[foundIndex(aRow*12+bColumn)].alive){
             var flag1=sameRow(aRow,aColumn,aRow,bColumn);
             var flag2=sameColumn(bRow,bColumn,aRow,bColumn);
             var flag3=flag1 && flag2;
         }else {
             var flag3=false;
         }
-        if(!square[foundIndex(bRow*10+aColumn)].alive){///
+        if(!square[foundIndex(bRow*12+aColumn)].alive){///
             var flag4=sameRow(bRow,bColumn,bRow,aColumn);
             var flag5=sameColumn(aRow,aColumn,bRow,aColumn);
             var flag6=flag4 && flag5;
@@ -159,8 +173,8 @@ function turnOnce(aRow,aColumn,bRow,bColumn){
 }
 
 function turnTwice(aRow,aColumn,bRow,bColumn){
-    for(var i=0;i<10;i++){
-        if(!square[foundIndex(aRow*10+i)].alive){
+    for(var i=0;i<12;i++){
+        if(!square[foundIndex(aRow*12+i)].alive){
             var flag1=sameRow(aRow,aColumn,aRow,i);
             var flag2=turnOnce(bRow,bColumn,aRow,i);
             var flag3=flag1 && flag2;
@@ -171,8 +185,8 @@ function turnTwice(aRow,aColumn,bRow,bColumn){
             var flag3=false;
         }
     }
-    for(var i=0;i<7;i++){
-        if(!square[foundIndex(i*10+aColumn)].alive){
+    for(var i=0;i<9;i++){
+        if(!square[foundIndex(i*12+aColumn)].alive){
             var flag4=sameColumn(aRow,aColumn,i,aColumn);
             var flag5=turnOnce(bRow,bColumn,i,aColumn);
             var flag6=flag4 && flag5;
