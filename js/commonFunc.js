@@ -23,7 +23,7 @@ function selectOne(arr){
 
 //var c=selectOne(arr1);
 function foundIndex(loc){
-	for(var i=0;i<70;i++){
+	for(var i=0;i<108;i++){
 		if(square[i].location==loc){
 			return i;
 		}
@@ -33,7 +33,7 @@ function foundIndex(loc){
 }
 
 function checkGameOver(){
-	for(var i=0;i<70;i++){
+	for(var i=0;i<108;i++){
         if(square[i].alive==false){
             var gameOver=true;
         }else{
@@ -42,4 +42,46 @@ function checkGameOver(){
         }
     }
 	return gameOver;
+}
+
+function checkGameCorrect(){
+	outerLoop:
+	for(var i=0;i<108;i++){
+		if(square[i].alive){
+			var lc1=square[i].location;
+			var row1=lc1/12;
+			var column1=lc1%12;
+			for(var j=i+1;j<108;j++){
+				var lc2=square[j].location;
+				var row2=lc2/12;
+				var column2=lc2%12;
+				var su=samePic(row1,column1,row2,column2);
+				if(su){
+
+					break outerLoop;
+				}
+
+			}
+		}
+	}
+	return su;
+}
+
+
+function drawScore(){
+	ctx1.textAlign="start";
+	ctx1.textBaseline="top";
+	ctx1.save();
+	ctx1.fillStyle="white";
+	ctx1.strokeStyle="white";
+	ctx1.font="bold 20px Arial";
+	ctx1.fillText("分 数 :",20,20);
+	ctx1.fillText(score,100,20);
+
+
+
+
+
+
+	ctx1.restore();
 }
